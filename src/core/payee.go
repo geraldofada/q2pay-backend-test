@@ -12,6 +12,7 @@ type Payee struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Doc      string `json:"doc"`
+	Balance  Money  `json:"balance" gorm:"type:string"`
 	Salt     string `json:"-"`
 	Password string `json:"-"`
 }
@@ -46,6 +47,7 @@ func NewPayee(name string, email string, password string, doc string) (Payee, er
 		Name:     name,
 		Email:    email,
 		Doc:      doc,
+		Balance:  Money{Amount: 0, Currency: BRL},
 		Salt:     salt64,
 		Password: hashedPassword,
 	}, nil
@@ -68,4 +70,3 @@ func (a *Payee) Login(password string) (Token, error) {
 
 	return token, nil
 }
-
