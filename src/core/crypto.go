@@ -13,6 +13,16 @@ import (
 
 type Token string
 
+type TokenMissingError struct{}
+type TokenInvalidError struct{}
+
+func (e TokenMissingError) Error() string {
+	return "account invalid token"
+}
+func (e TokenInvalidError) Error() string {
+	return "payee missing token"
+}
+
 func generateSalt(size int) ([]byte, error) {
 	salt := make([]byte, size)
 
@@ -66,4 +76,30 @@ func validateJwt(token Token) (*jwt.Token, error) {
 	}
 
 	return tokenParsed, nil
+}
+
+func (t Token) Authorize() (bool, error) {
+	if t == "" {
+		return false, TokenMissingError{}
+	}
+
+	validatedToken, err := validateJwt(t)
+	if err != nil {
+		return false, err
+	}
+
+	if !validatedToken.Valid {
+		return false, TokenInvalidError{}
+	}
+
+	claims, ok := validatedToken.Claims.(*jwt.StandardClaims)
+	if !ok {
+		return false, TokenInvalidError{}
+	}
+
+	if claims.ExpiresAt < time.Now().UTC().Unix() {
+		return false, TokenInvalidError{}
+	}
+
+	return true, nil
 }
