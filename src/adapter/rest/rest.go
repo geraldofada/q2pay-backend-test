@@ -7,7 +7,7 @@ import (
 )
 
 type Rest struct {
-	fiber *fiber.App
+	Fiber *fiber.App
 }
 
 type fiberReturnCtx func(*fiber.Ctx) error
@@ -17,10 +17,10 @@ func New() Rest {
 	rest.Use(cors.New())
 
 	return Rest{
-		fiber: rest,
+		Fiber: rest,
 	}
 }
 
-func (r *Rest) SetupPayeeRoutes(payee port.PayeeUseCase) {
+func (r Rest) SetupPayeeRoutes(payee port.PayeeUseCase) {
 	r.setupPayeeRoutes(payee)
 }

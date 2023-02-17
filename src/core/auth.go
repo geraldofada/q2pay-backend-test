@@ -98,7 +98,7 @@ func (t Token) Authorize() (bool, error) {
 	}
 
 	if claims.ExpiresAt < time.Now().UTC().Unix() {
-		return false, TokenInvalidError{}
+		return false, nil
 	}
 
 	return true, nil
