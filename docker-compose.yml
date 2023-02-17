@@ -1,0 +1,10 @@
+version: '3.9'
+
+services: 
+    postgres-dev:
+        image: postgres
+        environment:
+            POSTGRES_PASSWORD: pass123
+            POSTGRES_DB: ledger_dev
+        ports: 
+            - 5432:5432
