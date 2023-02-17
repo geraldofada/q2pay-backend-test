@@ -1,25 +1,25 @@
 package rest
 
 import (
-	"github.com/geraldofada/ledger-backend/src/port"
+	"github.com/geraldofada/q2pay-backend-test/src/port"
 	"github.com/gofiber/fiber/v2"
 )
 
-func injectCreatePayee(app port.AppAccountPort) fiberReturnCtx {
+func injectSignupPayee(app port.PayeeUseCase) fiberReturnCtx {
 	return func(c *fiber.Ctx) error {
-		return createPayee(c, app)
+		return signupPayee(c, app)
 	}
 }
 
-func injectLoginPayee(app port.AppAccountPort) fiberReturnCtx {
+func injectLoginPayee(app port.PayeeUseCase) fiberReturnCtx {
 	return func(c *fiber.Ctx) error {
 		return loginPayee(c, app)
 	}
 }
 
-func (r *Rest) setupPayeeRoutes(app port.AppAccountPort) {
-	payee := r.fiber.Group("/payee")
+func (r Rest) setupPayeeRoutes(app port.PayeeUseCase) {
+	payee := r.Fiber.Group("/payee")
 
-	payee.Post("/", injectCreatePayee(app))
+	payee.Post("/", injectSignupPayee(app))
 	payee.Post("/login", injectLoginPayee(app))
 }
