@@ -8,6 +8,6 @@ const (
 type Currency string
 
 type Money struct {
-	Amount int64
+	Amount   int64
 	Currency Currency
 }

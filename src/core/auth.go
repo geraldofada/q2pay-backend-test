@@ -2,10 +2,10 @@ package core
 
 import (
 	"crypto/rand"
+	"errors"
 	"os"
 	"strconv"
 	"time"
-	"errors"
 
 	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/argon2"
