@@ -28,7 +28,7 @@ type Account struct {
 type AccountDuplicateError struct{}
 type AccountNotFoundError struct{}
 type AccountInvalidPasswordError struct{}
-type AccountInvalidType struct{}
+type AccountInvalidTypeError struct{}
 
 func (e AccountDuplicateError) Error() string {
 	return "account duplicate"
@@ -40,7 +40,7 @@ func (e AccountInvalidPasswordError) Error() string {
 	return "account invalid password"
 }
 
-func (e AccountInvalidType) Error() string {
+func (e AccountInvalidTypeError) Error() string {
 	return "account invalid type"
 }
 
@@ -56,7 +56,7 @@ func validateAccountType(toValidate string) bool {
 
 func NewAccount(name string, email string, password string, doc string, accType string) (Account, error) {
 	if !validateAccountType(accType) {
-		return Account{}, AccountInvalidType{}
+		return Account{}, AccountInvalidTypeError{}
 	}
 
 	pepper := os.Getenv("PASS_SECRET")
