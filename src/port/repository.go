@@ -6,4 +6,5 @@ type AccountRepository interface {
 	CreateAccount(account *core.Account) error
 	GetAccountByEmail(email string) (core.Account, error)
 	GetAccountByDoc(doc string) (core.Account, error)
+	SaveMoneyTransferBetweenAccounts(src *core.Account, target *core.Account) (bool, error)
 }
