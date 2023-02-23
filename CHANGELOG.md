@@ -2,6 +2,34 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.2.0 - 2023-02-23
+#### Bug Fixes
+- newAccount was not creating with the new type prop - (9b568a7) - Geraldo Fada
+- logic bug for account type test - (6be713f) - Geraldo Fada
+- broken payee login test - (e4dae65) - Geraldo Fada
+- create payee fixed using the format method of Money - (3828681) - Geraldo Fada
+#### Features
+- new transfer money between accounts created - (6d9218b) - Geraldo Fada
+- money deposit and withdraw methods - (68a762c) - Geraldo Fada
+- ParseStringToMoney implemented - (f590377) - Geraldo Fada
+- added money tests and dealing with negative amount - (6198f7a) - Geraldo Fada
+- format method for Money - (08f2cbe) - Geraldo Fada
+#### Refactoring
+- Account now have a type of COMMON or SELLER - (ca081a7) - Geraldo Fada
+#### Style
+- renaming error for account invalid type - (516850f) - Geraldo Fada
+- renaming error for account invalid type - (1aa85c2) - Geraldo Fada
+- major renaming Payee is now Account - (8ce88ba) - Geraldo Fada
+- gofmt - (ba740d9) - Geraldo Fada
+#### Tests
+- tests for new transfer money between accounts created - (9fdf18c) - Geraldo Fada
+- tests for money deposit and withdraw methods - (295efea) - Geraldo Fada
+- test for Account type - (40370c4) - Geraldo Fada
+- ParseStringToMoney test - (2de4ce4) - Geraldo Fada
+- payee core tests - (797dc8c) - Geraldo Fada
+
+- - -
+
 ## 0.1.0 - 2023-02-17
 #### Bug Fixes
 - added .env to ignore - (6c226a2) - Geraldo Fada
