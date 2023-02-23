@@ -8,20 +8,20 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type signupPayeeInput struct {
+type signupAccountInput struct {
 	Name     string `validate:"required,min=3,max=32"`
 	Email    string `validate:"required,email,min=6,max=32"`
 	Doc      string `validate:"required,min=6,max=32"`
 	Password string `validate:"required,min=3,max=64"`
 }
 
-type loginPayeeInput struct {
+type loginAccountInput struct {
 	Email    string `validate:"required,email,min=6,max=32"`
 	Password string `validate:"required,min=3,max=64"`
 }
 
-func signupPayee(c *fiber.Ctx, app port.PayeeUseCase) error {
-	var input signupPayeeInput
+func signupAccount(c *fiber.Ctx, app port.AccountUseCase) error {
+	var input signupAccountInput
 
 	if err := c.BodyParser(&input); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -34,20 +34,20 @@ func signupPayee(c *fiber.Ctx, app port.PayeeUseCase) error {
 		return c.Status(fiber.StatusBadRequest).JSON(errValidator)
 	}
 
-	payee, err := app.PayeeSignup(input.Name, input.Email, input.Doc, input.Password)
+	account, err := app.AccountSignup(input.Name, input.Email, input.Doc, input.Password)
 	if err != nil {
-		if errors.Is(err, core.PayeeDuplicateError{}) {
+		if errors.Is(err, core.AccountDuplicateError{}) {
 			return c.Status(fiber.StatusPreconditionFailed).JSON(fiber.Map{
 				"message": "Email or document already exists",
 			})
 		}
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(payee)
+	return c.Status(fiber.StatusCreated).JSON(account)
 }
 
-func loginPayee(c *fiber.Ctx, app port.PayeeUseCase) error {
-	var input loginPayeeInput
+func loginAccount(c *fiber.Ctx, app port.AccountUseCase) error {
+	var input loginAccountInput
 
 	if err := c.BodyParser(&input); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -60,15 +60,15 @@ func loginPayee(c *fiber.Ctx, app port.PayeeUseCase) error {
 		return c.Status(fiber.StatusBadRequest).JSON(errValidator)
 	}
 
-	payee, token, err := app.PayeeLogin(input.Email, input.Password)
+	account, token, err := app.AccountLogin(input.Email, input.Password)
 	if err != nil {
-		if errors.Is(err, core.PayeeInvalidPasswordError{}) {
+		if errors.Is(err, core.AccountInvalidPasswordError{}) {
 			return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 				"message": "Wrong e-mail or password",
 			})
 		}
 
-		if errors.Is(err, core.PayeeNotFoundError{}) {
+		if errors.Is(err, core.AccountNotFoundError{}) {
 			return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
 				"message": "Wrong e-mail or password",
 			})
@@ -76,7 +76,7 @@ func loginPayee(c *fiber.Ctx, app port.PayeeUseCase) error {
 	}
 
 	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
-		"payee": payee,
+		"account": account,
 		"token": token,
 	})
 }

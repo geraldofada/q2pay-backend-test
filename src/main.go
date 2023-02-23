@@ -28,14 +28,14 @@ func main() {
 	}
 
 	if migrate {
-		repo.Conn.AutoMigrate(&core.Payee{})
+		repo.Conn.AutoMigrate(&core.Account{})
 		os.Exit(0)
 	}
 
 	app := app.New(repo)
 
 	rest := rest.New()
-	rest.SetupPayeeRoutes(app)
+	rest.SetupAccountRoutes(app)
 
 	log.Fatal(rest.Fiber.Listen(":8080"))
 }

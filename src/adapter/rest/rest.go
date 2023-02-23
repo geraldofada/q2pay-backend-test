@@ -21,6 +21,6 @@ func New() Rest {
 	}
 }
 
-func (r Rest) SetupPayeeRoutes(payee port.PayeeUseCase) {
-	r.setupPayeeRoutes(payee)
+func (r Rest) SetupAccountRoutes(account port.AccountUseCase) {
+	r.setupAccountRoutes(account)
 }

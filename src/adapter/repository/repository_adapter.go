@@ -40,15 +40,15 @@ func New() (*Repository, error) {
 	return &Repository{Conn: connection}, err
 }
 
-func (r *Repository) CreatePayee(payee core.Payee) error {
+func (r *Repository) CreateAccount(account core.Account) error {
 	//TODO: salvando por map o Gorm ignora os hooks e não retorna as primary keys preenchidas
-	result := r.Conn.Model(&core.Payee{}).Create(map[string]interface{}{
-		"Name":     payee.Name,
-		"Email":    payee.Email,
-		"Doc":      payee.Doc,
-		"Balance":  payee.Balance.Format(),
-		"Salt":     payee.Salt,
-		"Password": payee.Password,
+	result := r.Conn.Model(&core.Account{}).Create(map[string]interface{}{
+		"Name":     account.Name,
+		"Email":    account.Email,
+		"Doc":      account.Doc,
+		"Balance":  account.Balance.Format(),
+		"Salt":     account.Salt,
+		"Password": account.Password,
 	})
 
 	if result.Error != nil {
@@ -57,6 +57,6 @@ func (r *Repository) CreatePayee(payee core.Payee) error {
 	return nil
 }
 
-func (r *Repository) GetPayeeByEmail(email string) (core.Payee, error) { return core.Payee{}, nil }
+func (r *Repository) GetAccountByEmail(email string) (core.Account, error) { return core.Account{}, nil }
 
-func (r *Repository) GetPayeeByDoc(email string) (core.Payee, error) { return core.Payee{}, nil }
+func (r *Repository) GetAccountByDoc(email string) (core.Account, error) { return core.Account{}, nil }

@@ -2,8 +2,8 @@ package port
 
 import "github.com/geraldofada/q2pay-backend-test/src/core"
 
-type PayeeRepository interface {
-	CreatePayee(payee core.Payee) error
-	GetPayeeByEmail(email string) (core.Payee, error)
-	GetPayeeByDoc(doc string) (core.Payee, error)
+type AccountRepository interface {
+	CreateAccount(account core.Account) error
+	GetAccountByEmail(email string) (core.Account, error)
+	GetAccountByDoc(doc string) (core.Account, error)
 }

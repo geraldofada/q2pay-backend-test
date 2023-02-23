@@ -8,59 +8,59 @@ import (
 )
 
 type App struct {
-	payeeRepo port.PayeeRepository
+	accountRepo port.AccountRepository
 }
 
-func New(payeeRepo port.PayeeRepository) *App {
-	return &App{payeeRepo: payeeRepo}
+func New(accountRepo port.AccountRepository) *App {
+	return &App{accountRepo: accountRepo}
 }
 
-func (app *App) PayeeLogin(email string, password string) (core.Payee, core.Token, error) {
-	payee, err := app.payeeRepo.GetPayeeByEmail(email)
+func (app *App) AccountLogin(email string, password string) (core.Account, core.Token, error) {
+	account, err := app.accountRepo.GetAccountByEmail(email)
 	if err != nil {
-		if errors.Is(err, core.PayeeNotFoundError{}) {
-			// app.log.Info("Login failed, not found", "payee", payee)
-			return payee, "", err
+		if errors.Is(err, core.AccountNotFoundError{}) {
+			// app.log.Info("Login failed, not found", "account", account)
+			return account, "", err
 		}
 
 		// app.log.Fatal("Login account", "error", err)
 		panic(err)
 	}
 
-	token, err := payee.Login(password)
+	token, err := account.Login(password)
 	if err != nil {
-		if errors.Is(err, core.PayeeInvalidPasswordError{}) {
-			// app.log.Info("Login failed, invalid password", "payee", payee)
-			return payee, token, err
+		if errors.Is(err, core.AccountInvalidPasswordError{}) {
+			// app.log.Info("Login failed, invalid password", "account", account)
+			return account, token, err
 		}
 
 		// app.log.Fatal("Login account", "error", err)
 		panic(err)
 	}
 
-	// app.log.Info("Login ocurred", "payee", payee)
-	return payee, token, nil
+	// app.log.Info("Login ocurred", "account", account)
+	return account, token, nil
 }
 
-func (app *App) PayeeSignup(name string, email string, password string, doc string) (core.Payee, error) {
-	newPayee, err := core.NewPayee(name, email, password, doc)
+func (app *App) AccountSignup(name string, email string, password string, doc string) (core.Account, error) {
+	newAccount, err := core.NewAccount(name, email, password, doc)
 	if err != nil {
-		// app.log.Fatal("Signup payee creation", "error", err)
+		// app.log.Fatal("Signup account creation", "error", err)
 		panic(err)
 	}
 
-	err = app.payeeRepo.CreatePayee(newPayee)
+	err = app.accountRepo.CreateAccount(newAccount)
 	if err != nil {
-		if errors.Is(err, core.PayeeDuplicateError{}) {
-			// app.log.Info("Signup payee failed, email or document already exists", "payee", newPayee)
-			return newPayee, err
+		if errors.Is(err, core.AccountDuplicateError{}) {
+			// app.log.Info("Signup account failed, email or document already exists", "account", newAccount)
+			return newAccount, err
 		}
 		// app.log.Fatal("Signup account creation", "error", err)
 		panic(err)
 	}
 
 	// app.log.Info("Signup account created", "account", newAcc)
-	return newPayee, nil
+	return newAccount, nil
 }
 
 func (app *App) Authorize(token core.Token) (bool, error) {
