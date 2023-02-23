@@ -125,7 +125,7 @@ func TestAccount_TransferMoney(t *testing.T) {
 	if err == nil {
 		t.Error("Unexpected error while tranfering money")
 	}
-	if !errors.Is(err, AccountNotEnoughBalance{}) {
+	if !errors.Is(err, AccountNotEnoughBalanceError{}) {
 		t.Error("Unexpected error while tranfering money")
 	}
 
