@@ -41,15 +41,7 @@ func New() (*Repository, error) {
 }
 
 func (r *Repository) CreateAccount(account core.Account) error {
-	//TODO: salvando por map o Gorm ignora os hooks e não retorna as primary keys preenchidas
-	result := r.Conn.Model(&core.Account{}).Create(map[string]interface{}{
-		"Name":     account.Name,
-		"Email":    account.Email,
-		"Doc":      account.Doc,
-		"Balance":  account.Balance.Format(),
-		"Salt":     account.Salt,
-		"Password": account.Password,
-	})
+	result := r.Conn.Create(&account)
 
 	if result.Error != nil {
 		return result.Error
