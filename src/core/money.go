@@ -19,9 +19,19 @@ type Money struct {
 }
 
 type MoneyParseError struct{}
+type MoneyNotEnoughToWithdrawError struct{}
+type MoneyMismatchCurrencyError struct{}
 
 func (e MoneyParseError) Error() string {
 	return "invalid string to parse as Money"
+}
+
+func (e MoneyNotEnoughToWithdrawError) Error() string {
+	return "not enough money to withdraw"
+}
+
+func (e MoneyMismatchCurrencyError) Error() string {
+	return "mismatch currency"
 }
 
 // IMPORTANT: remember to add new currencies in here
@@ -85,4 +95,32 @@ func ParseStringToMoney(money string) (Money, error) {
 		Currency: Currency(currency[0]),
 		Amount:   int64(amountInt),
 	}, nil
+}
+
+func (m *Money) withdraw(toWithdraw Money) (bool, error) {
+	if m.Amount < toWithdraw.Amount || toWithdraw.Amount < 0 {
+		return false, MoneyNotEnoughToWithdrawError{}
+	}
+
+	if m.Currency != toWithdraw.Currency {
+		return false, MoneyMismatchCurrencyError{}
+	}
+
+	m.Amount -= toWithdraw.Amount
+
+	return true, nil
+}
+
+func (m *Money) deposit(toDeposit Money) (bool, error) {
+	if toDeposit.Amount < 0 {
+		return false, MoneyNotEnoughToWithdrawError{}
+  }
+
+	if m.Currency != toDeposit.Currency {
+		return false, MoneyMismatchCurrencyError{}
+	}
+
+	m.Amount += toDeposit.Amount
+
+	return true, nil
 }
