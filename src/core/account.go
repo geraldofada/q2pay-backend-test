@@ -7,19 +7,28 @@ import (
 	"gorm.io/gorm"
 )
 
+type AccountType string
+
+const (
+	COMMON AccountType = "COMMON"
+	SELLER AccountType = "SELLER"
+)
+
 type Account struct {
 	gorm.Model
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Doc      string `json:"doc"`
-	Balance  Money  `json:"balance" gorm:"type:string"`
-	Salt     string `json:"-"`
-	Password string `json:"-"`
+	Name     string      `json:"name"`
+	Email    string      `json:"email"`
+	Doc      string      `json:"doc"`
+	Balance  Money       `json:"balance" gorm:"type:string"`
+	Type     AccountType `json:"type" gorm:"type:string"`
+	Salt     string      `json:"-"`
+	Password string      `json:"-"`
 }
 
 type AccountDuplicateError struct{}
 type AccountNotFoundError struct{}
 type AccountInvalidPasswordError struct{}
+type AccountInvalidType struct{}
 
 func (e AccountDuplicateError) Error() string {
 	return "account duplicate"
@@ -31,7 +40,25 @@ func (e AccountInvalidPasswordError) Error() string {
 	return "account invalid password"
 }
 
-func NewAccount(name string, email string, password string, doc string) (Account, error) {
+func (e AccountInvalidType) Error() string {
+	return "account invalid type"
+}
+
+// IMPORTANT: remember to add new types in here
+func validateAccountType(toValidate string) bool {
+	switch toValidate {
+	case string(COMMON), string(SELLER):
+		return true
+	}
+
+	return false
+}
+
+func NewAccount(name string, email string, password string, doc string, accType string) (Account, error) {
+	if !validateAccountType(accType) {
+		return Account{}, AccountInvalidType{}
+	}
+
 	pepper := os.Getenv("PASS_SECRET")
 	salt, err := generateSalt(32)
 	if err != nil {
