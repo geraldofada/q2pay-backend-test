@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -54,7 +55,33 @@ func (r *Repository) CreateAccount(account *core.Account) error {
 }
 
 func (r *Repository) GetAccountByEmail(email string) (core.Account, error) {
-	return core.Account{}, nil
+	foundAcc := core.Account{}
+
+	result := r.Conn.Where("email = ?", email).First(&foundAcc)
+
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return core.Account{}, core.AccountNotFoundError{}
+		}
+
+		return core.Account{}, result.Error
+	}
+
+	return foundAcc, nil
 }
 
-func (r *Repository) GetAccountByDoc(email string) (core.Account, error) { return core.Account{}, nil }
+func (r *Repository) GetAccountByDoc(doc string) (core.Account, error) { 
+	foundAcc := core.Account{}
+
+	result := r.Conn.Where("doc = ?", doc).First(&foundAcc)
+
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return core.Account{}, core.AccountNotFoundError{}
+		}
+
+		return core.Account{}, result.Error
+	}
+
+	return foundAcc, nil
+}
