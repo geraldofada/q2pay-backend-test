@@ -49,7 +49,7 @@ func (app *App) AccountSignup(name string, email string, password string, doc st
 		panic(err)
 	}
 
-	err = app.accountRepo.CreateAccount(newAccount)
+	err = app.accountRepo.CreateAccount(&newAccount)
 	if err != nil {
 		if errors.Is(err, core.AccountDuplicateError{}) {
 			// app.log.Info("Signup account failed, email or document already exists", "account", newAccount)

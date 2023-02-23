@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/geraldofada/q2pay-backend-test/src/core"
+	"github.com/jackc/pgx/v5/pgconn"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -40,10 +41,13 @@ func New() (*Repository, error) {
 	return &Repository{Conn: connection}, err
 }
 
-func (r *Repository) CreateAccount(account core.Account) error {
-	result := r.Conn.Create(&account)
+func (r *Repository) CreateAccount(account *core.Account) error {
+	result := r.Conn.Create(account)
 
 	if result.Error != nil {
+		if result.Error.(*pgconn.PgError).Code == "23505" {
+			return core.AccountDuplicateError{}
+		}
 		return result.Error
 	}
 	return nil
