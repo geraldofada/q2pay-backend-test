@@ -111,3 +111,82 @@ func TestParseStringToMoney(t *testing.T) {
 		t.Error("Unexpected error while parsing string to money")
   }
 }
+
+func TestMoney_withdraw(t *testing.T) {
+	money1 := Money{ Amount: 0, Currency: BRL }
+	money2 := Money{ Amount: -1, Currency: BRL }
+	money3 := Money{ Amount: 9, Currency: BRL }
+	money4 := Money{ Amount: 100, Currency: BRL }
+	money5 := Money{ Amount: 99, Currency: USD }
+
+	t.Log("It shouldreturn MoneyNotEnoughToWithdrawError if does not have enough money")
+	_, err := money1.withdraw(money4)
+	if err == nil {
+		t.Error("Unexpected error while withdrawing money")
+	}
+	if !errors.Is(err, MoneyNotEnoughToWithdrawError{}) {
+		t.Error("Unexpected error while withdrawing money")
+  }
+
+	t.Log("It should return MoneyNotEnoughToWithdrawError if withdrawing negative amount")
+	_, err = money1.withdraw(money2)
+	if err == nil {
+		t.Error("Unexpected error while withdrawing money")
+	}
+	if !errors.Is(err, MoneyNotEnoughToWithdrawError{}) {
+		t.Error("Unexpected error while withdrawing money")
+  }
+
+	t.Log("It should return MoneyMismatchCurrencyError if withdrawing from different currencies")
+	_, err = money4.withdraw(money5)
+	if err == nil {
+		t.Error("Unexpected error while withdrawing money")
+	}
+	if !errors.Is(err, MoneyMismatchCurrencyError{}) {
+		t.Error("Unexpected error while withdrawing money")
+  }
+
+	t.Log("It should modify the original Money on success")
+	ok, _ := money4.withdraw(money3)
+	if !ok {
+		t.Error("Unexpected error while withdrawing money")
+	}
+	if money4.Amount != (100 - 9) {
+		t.Error("Wrong withdraw value, expected 91")
+	}
+}
+
+func TestMoney_deposit(t *testing.T) {
+	money1 := Money{ Amount: 0, Currency: BRL }
+	money2 := Money{ Amount: -1, Currency: BRL }
+	money3 := Money{ Amount: 9, Currency: BRL }
+	money4 := Money{ Amount: 100, Currency: BRL }
+	money5 := Money{ Amount: 99, Currency: USD }
+
+	t.Log("It should return MoneyNotEnoughToWithdrawError if depositing negative amount")
+	_, err := money1.deposit(money2)
+	if err == nil {
+		t.Error("Unexpected error while withdrawing money")
+	}
+	if !errors.Is(err, MoneyNotEnoughToWithdrawError{}) {
+		t.Error("Unexpected error while withdrawing money")
+  }
+
+	t.Log("It should return MoneyMismatchCurrencyError if withdrawing from different currencies")
+	_, err = money4.deposit(money5)
+	if err == nil {
+		t.Error("Unexpected error while withdrawing money")
+	}
+	if !errors.Is(err, MoneyMismatchCurrencyError{}) {
+		t.Error("Unexpected error while withdrawing money")
+  }
+
+	t.Log("It should modify the original Money on success")
+	ok, _ := money4.deposit(money3)
+	if !ok {
+		t.Error("Unexpected error while withdrawing money")
+	}
+	if money4.Amount != (100 + 9) {
+		t.Error("Wrong withdraw value, expected 109")
+	}
+}
