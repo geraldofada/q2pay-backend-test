@@ -75,6 +75,7 @@ func NewAccount(name string, email string, password string, doc string, accType 
 		Email:    email,
 		Doc:      doc,
 		Balance:  Money{Amount: 0, Currency: BRL},
+		Type: AccountType(accType),
 		Salt:     salt64,
 		Password: hashedPassword,
 	}, nil
