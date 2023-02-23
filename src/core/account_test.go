@@ -28,7 +28,7 @@ func TestNewAccount(t *testing.T) {
 
 	t.Log("It should return AccountInvalidType with an invalid account type")
 	_, err = NewAccount("T", "t@teste.com", "123", "11122233344", "invalid")
-	if !errors.Is(err, AccountInvalidType{}) {
+	if err == nil || !errors.Is(err, AccountInvalidType{}) {
 		t.Error("Expected AccountInvalidType error to return")
 	}
 
