@@ -114,7 +114,7 @@ func (m *Money) withdraw(toWithdraw Money) (bool, error) {
 func (m *Money) deposit(toDeposit Money) (bool, error) {
 	if toDeposit.Amount < 0 {
 		return false, MoneyNotEnoughToWithdrawError{}
-  }
+	}
 
 	if m.Currency != toDeposit.Currency {
 		return false, MoneyMismatchCurrencyError{}

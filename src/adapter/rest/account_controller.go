@@ -77,6 +77,6 @@ func loginAccount(c *fiber.Ctx, app port.AccountUseCase) error {
 
 	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
 		"account": account,
-		"token": token,
+		"token":   token,
 	})
 }

@@ -57,6 +57,8 @@ func (r *Repository) CreateAccount(account core.Account) error {
 	return nil
 }
 
-func (r *Repository) GetAccountByEmail(email string) (core.Account, error) { return core.Account{}, nil }
+func (r *Repository) GetAccountByEmail(email string) (core.Account, error) {
+	return core.Account{}, nil
+}
 
 func (r *Repository) GetAccountByDoc(email string) (core.Account, error) { return core.Account{}, nil }

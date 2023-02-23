@@ -163,7 +163,7 @@ func TestAccount_TransferMoney(t *testing.T) {
 	if err != nil {
 		t.Error("Unexpected error while tranfering money")
 	}
-	if account2.Balance.Amount != 1199 && account1.Balance.Amount != 800{
+	if account2.Balance.Amount != 1199 && account1.Balance.Amount != 800 {
 		t.Error("Invalid tranfer money operation, expected source account to have 800 money and target account to have 1199")
 	}
 }
