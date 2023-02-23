@@ -85,3 +85,87 @@ func (app *App) Authorize(token core.Token) (bool, error) {
 	// }
 	return authorized, nil
 }
+
+func (app *App) AccountTransferMoney(amount string, srcEmailOrDoc string, targetEmailOrDoc string) (bool, error) {
+	srcAcc, err := app.accountRepo.GetAccountByEmail(srcEmailOrDoc)
+
+	checkForDoc := false
+
+	if err != nil {
+		if errors.Is(err, core.AccountNotFoundError{}) {
+			checkForDoc = true
+		}
+		// app.log.Fatal("Signup account creation", "error", err)
+		panic(err)
+	}
+
+	if checkForDoc {
+		srcAcc, err = app.accountRepo.GetAccountByDoc(srcEmailOrDoc)
+		if err != nil {
+			if errors.Is(err, core.AccountNotFoundError{}) {
+				return false, err
+			}
+			// app.log.Fatal("Signup account creation", "error", err)
+			panic(err)
+		}
+	}
+
+	targetAcc, err := app.accountRepo.GetAccountByEmail(srcEmailOrDoc)
+
+	checkForDoc = false
+
+	if err != nil {
+		if errors.Is(err, core.AccountNotFoundError{}) {
+			checkForDoc = true
+		}
+		// app.log.Fatal("Signup account creation", "error", err)
+		panic(err)
+	}
+
+	if checkForDoc {
+		targetAcc, err = app.accountRepo.GetAccountByDoc(srcEmailOrDoc)
+		if err != nil {
+			if errors.Is(err, core.AccountNotFoundError{}) {
+				return false, err
+			}
+			// app.log.Fatal("Signup account creation", "error", err)
+			panic(err)
+		}
+	}
+
+	moneyToTransfer, err := core.ParseStringToMoney(amount)
+	if err != nil {
+		if errors.Is(err, core.MoneyParseError{}) {
+			return false, err
+		}
+		panic(err)
+	}
+
+	_, err = srcAcc.TransferMoney(moneyToTransfer, &targetAcc)
+	if err != nil {
+		if errors.Is(err, core.AccountNotEnoughBalanceError{}) {
+			return false, err
+		}
+
+		if errors.Is(err, core.AccountSellerCannotTransferError{}) {
+			return false, err
+		}
+
+		if errors.Is(err, core.MoneyMismatchCurrencyError{}) {
+			return false, err
+		}
+
+		panic(err)
+	}
+
+	_, err = app.accountRepo.SaveMoneyTransferBetweenAccounts(&srcAcc, &targetAcc)
+	if err != nil {
+		if errors.Is(err, core.AccountNotFoundError{}) {
+			return false, err
+		}
+		// app.log.Fatal("Signup account creation", "error", err)
+		panic(err)
+	}
+
+	return true, nil
+}
