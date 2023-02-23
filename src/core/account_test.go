@@ -101,3 +101,69 @@ func TestAccount_Login(t *testing.T) {
 		t.Error("Found duplicate tokens")
 	}
 }
+
+func TestAccount_TransferMoney(t *testing.T) {
+	account1, _ := NewAccount("T", "t@teste.com", "123", "11122233344", "COMMON")
+	account2, _ := NewAccount("A", "a@teste.com", "123", "11122233344", "COMMON")
+	account3, _ := NewAccount("S", "s@teste.com", "123", "11122233344", "SELLER")
+
+	account1.Balance = Money{Amount: 1000, Currency: BRL}
+	account2.Balance = Money{Amount: 999, Currency: BRL}
+	account3.Balance = Money{Amount: 888, Currency: BRL}
+
+	t.Log("It should return AccountSellerCannotTransferError if a seller was trying to make a transfer")
+	_, err := account3.TransferMoney(Money{Amount: 777, Currency: BRL}, &account1)
+	if err == nil {
+		t.Error("Unexpected error while tranfering money")
+	}
+	if !errors.Is(err, AccountSellerCannotTransferError{}) {
+		t.Error("Unexpected error while tranfering money")
+	}
+
+	t.Log("It should return AccountNotEnoughBalance if source account does not have enough money")
+	_, err = account2.TransferMoney(Money{Amount: 1000, Currency: BRL}, &account1)
+	if err == nil {
+		t.Error("Unexpected error while tranfering money")
+	}
+	if !errors.Is(err, AccountNotEnoughBalance{}) {
+		t.Error("Unexpected error while tranfering money")
+	}
+
+	t.Log("It should return MoneyMismatchCurrencyError if different currencies was being used")
+	_, err = account2.TransferMoney(Money{Amount: 100, Currency: USD}, &account1)
+	if err == nil {
+		t.Error("Unexpected error while tranfering money")
+	}
+	if !errors.Is(err, MoneyMismatchCurrencyError{}) {
+		t.Error("Unexpected error while tranfering money")
+	}
+
+	account1.Balance = Money{Amount: 1000, Currency: USD}
+	t.Log("It should return MoneyMismatchCurrencyError if different currencies was being used")
+	_, err = account2.TransferMoney(Money{Amount: 100, Currency: BRL}, &account1)
+	if err == nil {
+		t.Error("Unexpected error while tranfering money")
+	}
+	if !errors.Is(err, MoneyMismatchCurrencyError{}) {
+		t.Error("Unexpected error while tranfering money")
+	}
+
+	account1.Balance = Money{Amount: 1000, Currency: BRL}
+	t.Log("It should withdraw from source account")
+	_, err = account1.TransferMoney(Money{Amount: 100, Currency: BRL}, &account2)
+	if err != nil {
+		t.Error("Unexpected error while tranfering money")
+	}
+	if account1.Balance.Amount != 900 {
+		t.Error("Invalid tranfer money operation, expected source account to have 900 money")
+	}
+
+	t.Log("It should deposit to target account")
+	_, err = account1.TransferMoney(Money{Amount: 100, Currency: BRL}, &account2)
+	if err != nil {
+		t.Error("Unexpected error while tranfering money")
+	}
+	if account2.Balance.Amount != 1199 && account1.Balance.Amount != 800{
+		t.Error("Invalid tranfer money operation, expected source account to have 800 money and target account to have 1199")
+	}
+}
