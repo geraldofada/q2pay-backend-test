@@ -16,10 +16,13 @@ type Money struct {
 	Currency Currency
 }
 
-// TODO: talvez lidar com valores negativos? nunca deveria acontecer, mas sabe-se lá
 func (m Money) Format() string {
 	reals := m.Amount / 100
 	cents := m.Amount % 100
+
+	if m.Amount < 0 {
+		return fmt.Sprintf("%s 0,00", m.Currency)
+	}
 
 	if cents < 10 {
 		return fmt.Sprintf("%s %d,0%d", m.Currency, reals, cents)
@@ -28,6 +31,5 @@ func (m Money) Format() string {
 	}
 }
 
-// TODO
 // func ParseStringToMoney(money string) Money {
 // }
