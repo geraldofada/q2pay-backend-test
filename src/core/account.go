@@ -2,6 +2,7 @@ package core
 
 import (
 	"encoding/base64"
+	"errors"
 	"os"
 
 	"gorm.io/gorm"
@@ -29,6 +30,8 @@ type AccountDuplicateError struct{}
 type AccountNotFoundError struct{}
 type AccountInvalidPasswordError struct{}
 type AccountInvalidTypeError struct{}
+type AccountSellerCannotTransferError struct{}
+type AccountNotEnoughBalanceError struct{}
 
 func (e AccountDuplicateError) Error() string {
 	return "account duplicate"
@@ -42,6 +45,14 @@ func (e AccountInvalidPasswordError) Error() string {
 
 func (e AccountInvalidTypeError) Error() string {
 	return "account invalid type"
+}
+
+func (e AccountSellerCannotTransferError) Error() string {
+	return "seller cannot tranfer money"
+}
+
+func (e AccountNotEnoughBalanceError) Error() string {
+	return "account does not have enough money to transfer"
 }
 
 // IMPORTANT: remember to add new types in here
@@ -79,6 +90,31 @@ func NewAccount(name string, email string, password string, doc string, accType 
 		Salt:     salt64,
 		Password: hashedPassword,
 	}, nil
+}
+
+// TODO: currency exchange
+func (src *Account) TransferMoney(toTransfer Money, target *Account) (bool, error) {
+	if src.Type == SELLER {
+		return false, AccountSellerCannotTransferError{}
+	}
+
+	_, err := src.Balance.withdraw(toTransfer)
+	if err != nil {
+		if errors.Is(err, MoneyNotEnoughToWithdrawError{}) {
+			return false, AccountNotEnoughBalanceError{}
+		}
+		return false, err
+	}
+
+	_, err = target.Balance.deposit(toTransfer)
+	if err != nil {
+		if errors.Is(err, MoneyNotEnoughToWithdrawError{}) {
+			return false, AccountNotEnoughBalanceError{}
+		}
+		return false, err
+	}
+
+	return true, nil
 }
 
 func (a *Account) Login(password string) (Token, error) {
