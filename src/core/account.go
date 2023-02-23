@@ -56,16 +56,16 @@ func (e AccountNotEnoughBalanceError) Error() string {
 }
 
 // IMPORTANT: remember to add new types in here
-func validateAccountType(toValidate string) bool {
+func validateAccountType(toValidate AccountType) bool {
 	switch toValidate {
-	case string(COMMON), string(SELLER):
+	case COMMON, SELLER:
 		return true
 	}
 
 	return false
 }
 
-func NewAccount(name string, email string, password string, doc string, accType string) (Account, error) {
+func NewAccount(name string, email string, password string, doc string, accType AccountType) (Account, error) {
 	if !validateAccountType(accType) {
 		return Account{}, AccountInvalidTypeError{}
 	}

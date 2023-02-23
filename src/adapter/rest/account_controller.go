@@ -12,6 +12,7 @@ type signupAccountInput struct {
 	Name     string `validate:"required,min=3,max=32"`
 	Email    string `validate:"required,email,min=6,max=32"`
 	Doc      string `validate:"required,min=6,max=32"`
+	Type     string `validate:"required,oneof='SELLER' 'COMMON'"`
 	Password string `validate:"required,min=3,max=64"`
 }
 
@@ -34,7 +35,7 @@ func signupAccount(c *fiber.Ctx, app port.AccountUseCase) error {
 		return c.Status(fiber.StatusBadRequest).JSON(errValidator)
 	}
 
-	account, err := app.AccountSignup(input.Name, input.Email, input.Doc, input.Password)
+	account, err := app.AccountSignup(input.Name, input.Email, input.Doc, input.Password, core.AccountType(input.Type))
 	if err != nil {
 		if errors.Is(err, core.AccountDuplicateError{}) {
 			return c.Status(fiber.StatusPreconditionFailed).JSON(fiber.Map{

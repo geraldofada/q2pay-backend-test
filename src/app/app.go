@@ -42,8 +42,8 @@ func (app *App) AccountLogin(email string, password string) (core.Account, core.
 	return account, token, nil
 }
 
-func (app *App) AccountSignup(name string, email string, password string, doc string) (core.Account, error) {
-	newAccount, err := core.NewAccount(name, email, password, doc)
+func (app *App) AccountSignup(name string, email string, password string, doc string, accType core.AccountType) (core.Account, error) {
+	newAccount, err := core.NewAccount(name, email, password, doc, accType)
 	if err != nil {
 		// app.log.Fatal("Signup account creation", "error", err)
 		panic(err)
