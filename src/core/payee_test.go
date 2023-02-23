@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/joho/godotenv"
@@ -86,6 +87,8 @@ func TestPayee_Login(t *testing.T) {
 		}
 	}
 
+	// Adding sleep here because the tokens were being generated too fast
+	time.Sleep(1 * time.Second)
 	token2, _ := payee1.Login("123")
 	t.Log("It should always return an unique token on multiples logins")
 	if token == token2 {
