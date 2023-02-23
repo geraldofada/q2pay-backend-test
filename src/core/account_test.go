@@ -19,11 +19,17 @@ func TestMain(m *testing.M) {
 }
 
 func TestNewAccount(t *testing.T) {
-	account1, err := NewAccount("T", "t@teste.com", "123", "11122233344")
-	account2, _ := NewAccount("T", "t@teste.com", "123", "11122233344")
+	account1, err := NewAccount("T", "t@teste.com", "123", "11122233344", "COMMON")
+	account2, _ := NewAccount("T", "t@teste.com", "123", "11122233344", "SELLER")
 
 	if err != nil {
 		t.Error("Salt failed to generate")
+	}
+
+	t.Log("It should return AccountInvalidType with an invalid account type")
+	_, err = NewAccount("T", "t@teste.com", "123", "11122233344", "invalid")
+	if !errors.Is(err, AccountInvalidType{}) {
+		t.Error("Expected AccountInvalidType error to return")
 	}
 
 	t.Log("It should always have a new hash for the Password")
@@ -43,7 +49,7 @@ func TestNewAccount(t *testing.T) {
 }
 
 func TestAccount_Login(t *testing.T) {
-	account1, err := NewAccount("T", "t@teste.com", "123", "11122233344")
+	account1, err := NewAccount("T", "t@teste.com", "123", "11122233344", "COMMON")
 
 	if err != nil {
 		t.Error("Salt failed to generate")
