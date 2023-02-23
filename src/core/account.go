@@ -18,10 +18,10 @@ const (
 type Account struct {
 	gorm.Model
 	Name     string      `json:"name"`
-	Email    string      `json:"email"`
-	Doc      string      `json:"doc"`
-	Balance  Money       `json:"balance" gorm:"type:string"`
-	Type     AccountType `json:"type" gorm:"type:string"`
+	Email    string      `json:"email" gorm:"uniqueIndex:account_email_unique"`
+	Doc      string      `json:"doc" gorm:"uniqueIndex:account_doc_unique"`
+	Balance  Money       `json:"balance" gorm:"embedded"`
+	Type     AccountType `json:"type" gorm:"embedded"`
 	Salt     string      `json:"-"`
 	Password string      `json:"-"`
 }
