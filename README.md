@@ -76,7 +76,7 @@ ser encontrado na raiz do projeto.
 - CRUD de Account, ficou faltando
     - Pegar 1 Account
     - Listar várias Account com filtros
-    - Deletear 1 Account
+    - Deletar 1 Account
     - Atualizar 1 Account
 - Utilizar o go-swagger para implementar o swagger
     - Com ele seria possível comentar as rotas de forma padronizada e inicializar, juntamente com a API, uma página de documentação
