@@ -59,6 +59,11 @@ Em ambos os casos, um servidor na porta 8080 irá inicializar.
 
 Pode-se encontrar um arquivo chamado swagger.yaml na raiz do projeto. Nele está a doc do REST utilizando Open Api 3.0.
 
+## Misc
+
+Foi utilizado o padrão conventional Conventional Commits e a partir dele gerado um changelog que pode
+ser encontrado na raiz do projeto.
+
 ## O que faltou implementar
 
 - Um modelo de logs
