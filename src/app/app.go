@@ -94,9 +94,10 @@ func (app *App) AccountTransferMoney(amount string, srcEmailOrDoc string, target
 	if err != nil {
 		if errors.Is(err, core.AccountNotFoundError{}) {
 			checkForDoc = true
+		} else {
+			// app.log.Fatal("Signup account creation", "error", err)
+			panic(err)
 		}
-		// app.log.Fatal("Signup account creation", "error", err)
-		panic(err)
 	}
 
 	if checkForDoc {
@@ -110,20 +111,21 @@ func (app *App) AccountTransferMoney(amount string, srcEmailOrDoc string, target
 		}
 	}
 
-	targetAcc, err := app.accountRepo.GetAccountByEmail(srcEmailOrDoc)
+	targetAcc, err := app.accountRepo.GetAccountByEmail(targetEmailOrDoc)
 
 	checkForDoc = false
 
 	if err != nil {
 		if errors.Is(err, core.AccountNotFoundError{}) {
 			checkForDoc = true
+		} else {
+			// app.log.Fatal("Signup account creation", "error", err)
+			panic(err)
 		}
-		// app.log.Fatal("Signup account creation", "error", err)
-		panic(err)
 	}
 
 	if checkForDoc {
-		targetAcc, err = app.accountRepo.GetAccountByDoc(srcEmailOrDoc)
+		targetAcc, err = app.accountRepo.GetAccountByDoc(targetEmailOrDoc)
 		if err != nil {
 			if errors.Is(err, core.AccountNotFoundError{}) {
 				return false, err
