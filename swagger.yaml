@@ -1,0 +1,156 @@
+openapi: 3.0.0
+info:
+    title: q2pay backend test
+    description: q2pay backend test api docs
+    version: 0.3.0
+paths:
+    /account:
+        post:
+            description: Use this resource to signup a new acount
+            requestBody:
+                description: Structure of an account
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/account"
+            responses:
+                "201":
+                    description: account created successfully
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/accountReturn"
+                "412":
+                    description: account already exist
+                "400":
+                    description: invalid request body
+    /account/login:
+        post:
+            description: Use this resource to signup a new acount
+            requestBody:
+                description: Structure of a login account
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/accountLogin"
+            responses:
+                "201":
+                    description: account created successfully
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/accountLoginReturn"
+                "422":
+                    description: wrong password or email
+                "400":
+                    description: invalid request body
+    /account/transfer-money:
+        post:
+            security:
+                - bearerAuth: []
+            description: Use this resource transfer money between accounts
+            requestBody:
+                description: Structure of a login account
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/accountTransferMoney"
+            responses:
+                "201":
+                    description: account created successfully
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/accountTransferMoneyRetrun"
+                "422":
+                    description: not enough money, wrong money format, wrong account type
+                "400":
+                    description: invalid request body
+                "401":
+                    description: unauthorized
+                "403":
+                    description: unauthorized
+
+components:
+    schemas:
+        account:
+            type: object
+            properties:
+                name:
+                    type: string
+                email:
+                    type: string
+                doc:
+                    type: string
+                password:
+                    type: string
+                type:
+                    type: string
+        accountReturn:
+            type: object
+            properties:
+                ID:
+                    type: number
+                CreatedAt:
+                    type: string
+                UpdatedAt:
+                    type: string
+                DeletedAt:
+                    type: string
+                name:
+                    type: string
+                email:
+                    type: string
+                doc:
+                    type: string
+                balance:
+                    type: object
+                    properties:
+                        Amount:
+                            type: number
+                        Currency:
+                            type: string
+                password:
+                    type: string
+                type:
+                    type: string
+        accountLogin:
+            type: object
+            properties:
+                email:
+                    type: string
+                password:
+                    type: string
+        accountLoginReturn:
+            type: object
+            properties:
+                account:
+                    $ref: "#/components/schemas/accountReturn"
+                token:
+                    type: string
+        accountTransferMoney:
+            type: object
+            properties:
+                source_email_or_doc:
+                    type: string
+                target_email_or_doc:
+                    type: string
+                amount:
+                    type: string
+        accountTransferMoneyRetrun:
+            type: object
+            properties:
+                source:
+                    type: string
+                target:
+                    type: string
+                transfered:
+                    type: string
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
