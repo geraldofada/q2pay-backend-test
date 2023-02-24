@@ -2,48 +2,13 @@ package repository
 
 import (
 	"errors"
-	"fmt"
-	"os"
 
 	"github.com/geraldofada/q2pay-backend-test/src/core"
 	"github.com/jackc/pgx/v5/pgconn"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-type Repository struct {
-	Conn *gorm.DB
-}
-
-func New() (*Repository, error) {
-	env := os.Getenv("ENV")
-
-	var conn string
-
-	// NOTE: para produção adicionar as condições nesse if
-	if env == "dev" {
-		hostname := os.Getenv("DB_DEV_HOST")
-		host_port := os.Getenv("DB_DEV_PORT")
-		username := os.Getenv("DB_DEV_USER")
-		password := os.Getenv("DB_DEV_PASS")
-		databasename := os.Getenv("DB_DEV_DATABASE")
-
-		conn =
-			fmt.Sprintf(
-				"sslmode=disable host=%s port=%s user=%s password=%s dbname=%s",
-				hostname,
-				host_port,
-				username,
-				password,
-				databasename)
-	}
-
-	connection, err := gorm.Open(postgres.Open(conn), &gorm.Config{})
-
-	return &Repository{Conn: connection}, err
-}
-
-func (r *Repository) CreateAccount(account *core.Account) error {
+func (r Repository) CreateAccount(account *core.Account) error {
 	result := r.Conn.Create(account)
 
 	if result.Error != nil {
@@ -55,7 +20,7 @@ func (r *Repository) CreateAccount(account *core.Account) error {
 	return nil
 }
 
-func (r *Repository) GetAccountByEmail(email string) (core.Account, error) {
+func (r Repository) GetAccountByEmail(email string) (core.Account, error) {
 	foundAcc := core.Account{}
 
 	result := r.Conn.Where("email = ?", email).First(&foundAcc)
@@ -71,7 +36,7 @@ func (r *Repository) GetAccountByEmail(email string) (core.Account, error) {
 	return foundAcc, nil
 }
 
-func (r *Repository) GetAccountByDoc(doc string) (core.Account, error) {
+func (r Repository) GetAccountByDoc(doc string) (core.Account, error) {
 	foundAcc := core.Account{}
 
 	result := r.Conn.Where("doc = ?", doc).First(&foundAcc)
@@ -87,7 +52,7 @@ func (r *Repository) GetAccountByDoc(doc string) (core.Account, error) {
 	return foundAcc, nil
 }
 
-func (r *Repository) GetAccountById(id uint) (core.Account, error) {
+func (r Repository) GetAccountById(id uint) (core.Account, error) {
 	foundAcc := core.Account{}
 
 	result := r.Conn.First(&foundAcc, id)
@@ -110,7 +75,7 @@ func (r *Repository) GetAccountById(id uint) (core.Account, error) {
 //
 // NOTE 2: é necessário apenas salvar os dados novamente pois a função existente no core
 // "Account.TransferMoney" lida com modificar os valores da struct Account
-func (r *Repository) SaveMoneyTransferBetweenAccounts(src *core.Account, target *core.Account) (bool, error) {
+func (r Repository) SaveMoneyTransferBetweenAccounts(src *core.Account, target *core.Account) (bool, error) {
 	err := r.Conn.Transaction(func(tx *gorm.DB) error {
 		result := tx.Save(src)
 		if result.Error != nil {
