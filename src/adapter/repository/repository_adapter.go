@@ -12,7 +12,7 @@ type Repository struct {
 	Conn *gorm.DB
 }
 
-func New() (*Repository, error) {
+func New() (Repository, error) {
 	env := os.Getenv("ENV")
 
 	var conn string
@@ -37,5 +37,5 @@ func New() (*Repository, error) {
 
 	connection, err := gorm.Open(postgres.Open(conn), &gorm.Config{})
 
-	return &Repository{Conn: connection}, err
+	return Repository{Conn: connection}, err
 }
