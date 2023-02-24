@@ -58,3 +58,24 @@ Em ambos os casos, um servidor na porta 8080 irá inicializar.
 ## Documentação das rotas
 
 Pode-se encontrar um arquivo chamado swagger.yaml na raiz do projeto. Nele está a doc do REST utilizando Open Api 3.0.
+
+## O que faltou implementar
+
+- Um modelo de logs
+    - Seria utilizado ao iniciar uma transação monetária
+        - Cria log no banco: transfer 1, from bob, to alice, completed false, success false, created_at, updated_at
+        - Realiza a transação monetária
+        - Ocorreu tudo certo: atualiza log com completed true e success true
+        - Ocorreu erro: atualizada log completed true e success false
+    - Seria implementado da mesma forma que Account, utilizando um repositório separado
+- CRUD de Account, ficou faltando
+    - Pegar 1 Account
+    - Listar várias Account com filtros
+    - Deletear 1 Account
+    - Atualizar 1 Account
+- Utilizar o go-swagger para implementar o swagger
+    - Com ele seria possível comentar as rotas de forma padronizada e inicializar, juntamente com a API, uma página de documentação
+    - O go-swagger gera as docs através dos comentários do código
+- Um sistema de logger
+    - Seria implementado do lado direito do hexágono (controlado)
+    - Existem diversos comentários espalhados pelo App de como seria utilizado esse logger
