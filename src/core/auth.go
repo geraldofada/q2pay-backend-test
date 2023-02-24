@@ -93,7 +93,7 @@ func (t Token) Authorize() (bool, uint, error) {
 
 	validatedToken, err := validateJwt(t)
 	if err != nil {
-		return false, 0, err
+		return false, 0, TokenInvalidError{}
 	}
 
 	if !validatedToken.Valid {
