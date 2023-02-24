@@ -9,10 +9,11 @@ import (
 
 type AppAccount struct {
 	accountRepo port.AccountRepository
+	authService port.AuthService
 }
 
-func NewAppAccount(accountRepo port.AccountRepository) AppAccount {
-	return AppAccount{accountRepo: accountRepo}
+func NewAppAccount(accountRepo port.AccountRepository, authService port.AuthService) AppAccount {
+	return AppAccount{accountRepo: accountRepo, authService: authService}
 }
 
 func (app AppAccount) AccountLogin(email string, password string) (core.Account, core.Token, error) {
@@ -115,6 +116,14 @@ func (app AppAccount) AccountTransferMoney(amount string, srcEmailOrDoc string, 
 	moneyToTransfer, err := core.ParseStringToMoney(amount)
 	if err != nil {
 		if errors.Is(err, core.MoneyParseError{}) {
+			return false, err
+		}
+		panic(err)
+	}
+
+	_, err = app.authService.AuthorizeTransfer()
+	if err != nil {
+		if errors.Is(err, core.AccountTransferNotAuthorized{}) {
 			return false, err
 		}
 		panic(err)

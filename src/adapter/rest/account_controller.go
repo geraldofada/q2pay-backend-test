@@ -148,6 +148,12 @@ func transferMoneyAccount(c *fiber.Ctx, app port.AccountUseCase) error {
 				"message": "Currency mismatch",
 			})
 		}
+
+		if errors.Is(err, core.AccountTransferNotAuthorized{}) {
+			return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{
+				"message": "Transfer was not authorized",
+			})
+		}
 	}
 
 	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{

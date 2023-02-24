@@ -7,6 +7,7 @@ import (
 
 	"github.com/geraldofada/q2pay-backend-test/src/adapter/repository"
 	"github.com/geraldofada/q2pay-backend-test/src/adapter/rest"
+	"github.com/geraldofada/q2pay-backend-test/src/adapter/service"
 	"github.com/geraldofada/q2pay-backend-test/src/app"
 	"github.com/geraldofada/q2pay-backend-test/src/core"
 	"github.com/joho/godotenv"
@@ -32,7 +33,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	appAccount := app.NewAppAccount(repo)
+	appAccount := app.NewAppAccount(repo, service.Service{})
 	appAuth := app.NewAuthApp()
 
 	rest := rest.New()

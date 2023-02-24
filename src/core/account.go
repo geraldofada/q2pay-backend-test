@@ -32,6 +32,7 @@ type AccountInvalidPasswordError struct{}
 type AccountInvalidTypeError struct{}
 type AccountSellerCannotTransferError struct{}
 type AccountNotEnoughBalanceError struct{}
+type AccountTransferNotAuthorized struct{}
 
 func (e AccountDuplicateError) Error() string {
 	return "account duplicate"
@@ -53,6 +54,10 @@ func (e AccountSellerCannotTransferError) Error() string {
 
 func (e AccountNotEnoughBalanceError) Error() string {
 	return "account does not have enough money to transfer"
+}
+
+func (e AccountTransferNotAuthorized) Error() string {
+	return "transfer was not authorized"
 }
 
 // IMPORTANT: remember to add new types in here
