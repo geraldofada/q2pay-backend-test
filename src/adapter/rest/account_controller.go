@@ -102,7 +102,22 @@ func transferMoneyAccount(c *fiber.Ctx, app port.AccountUseCase) error {
 		return c.Status(fiber.StatusBadRequest).JSON(errValidator)
 	}
 
-	_, err := app.AccountTransferMoney(input.Amount, input.SourceEmailOrDoc, input.TargetEmailOrDoc)
+	srcAcc, err := app.AccountGetById(c.Locals("loggedId").(uint))
+	if err != nil {
+		if errors.Is(err, core.AccountNotFoundError{}) {
+			return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+				"message": "Not enough privileges",
+			})
+		}
+	}
+
+	if srcAcc.Email != input.SourceEmailOrDoc && srcAcc.Doc != input.SourceEmailOrDoc {
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			"message": "Not enough privileges",
+		})
+	}
+
+	_, err = app.AccountTransferMoney(input.Amount, input.SourceEmailOrDoc, input.TargetEmailOrDoc)
 	if err != nil {
 		if errors.Is(err, core.AccountNotFoundError{}) {
 			return c.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{

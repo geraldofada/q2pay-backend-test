@@ -6,6 +6,7 @@ type AccountUseCase interface {
 	AccountLogin(email string, password string) (core.Account, core.Token, error)
 	AccountSignup(name string, email string, password string, doc string, accType core.AccountType) (core.Account, error)
 	AccountTransferMoney(amount string, srcEmailOrDoc string, targetEmailOrDoc string) (bool, error)
+	AccountGetById(id uint) (core.Account, error)
 }
 
 type AuthUseCase interface {

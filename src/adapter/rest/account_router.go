@@ -29,5 +29,5 @@ func (r Rest) setupAccountRoutes(app port.AccountUseCase) {
 	account.Post("/", injectSignupAccount(app))
 	account.Post("/login", injectLoginAccount(app))
 
-	account.Post("/transfer-money", injectTransferMoneyAccount(app))
+	account.Post("/transfer-money", authorize(appAuth), injectTransferMoneyAccount(appAccount))
 }
