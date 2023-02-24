@@ -8,7 +8,7 @@ import (
 
 type AppAuth struct{}
 
-func NewAuthApp() AppAuth {
+func NewAppAuth() AppAuth {
 	return AppAuth{}
 }
 

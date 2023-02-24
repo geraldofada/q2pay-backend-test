@@ -34,7 +34,7 @@ func main() {
 	}
 
 	appAccount := app.NewAppAccount(repo, service.Service{})
-	appAuth := app.NewAuthApp()
+	appAuth := app.NewAppAuth()
 
 	rest := rest.New()
 	rest.SetupAccountRoutes(appAccount, appAuth)
