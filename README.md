@@ -61,7 +61,7 @@ Pode-se encontrar um arquivo chamado swagger.yaml na raiz do projeto. Nele está
 
 ## Misc
 
-Foi utilizado o padrão conventional Conventional Commits e a partir dele gerado um changelog que pode
+Foi utilizado o padrão Conventional Commits e a partir dele gerado um changelog que pode
 ser encontrado na raiz do projeto.
 
 ## O que faltou implementar
