@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"github.com/geraldofada/q2pay-backend-test/src/port"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
@@ -19,8 +18,4 @@ func New() Rest {
 	return Rest{
 		Fiber: rest,
 	}
-}
-
-func (r Rest) SetupAccountRoutes(account port.AccountUseCase) {
-	r.setupAccountRoutes(account)
 }

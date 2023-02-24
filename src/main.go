@@ -32,10 +32,11 @@ func main() {
 		os.Exit(0)
 	}
 
-	app := app.New(repo)
+	appAccount := app.NewAppAccount(repo)
+	appAuth := app.NewAuthApp()
 
 	rest := rest.New()
-	rest.SetupAccountRoutes(app)
+	rest.SetupAccountRoutes(appAccount, appAuth)
 
 	log.Fatal(rest.Fiber.Listen(":8080"))
 }

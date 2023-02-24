@@ -23,11 +23,11 @@ func injectTransferMoneyAccount(app port.AccountUseCase) fiberReturnCtx {
 	}
 }
 
-func (r Rest) setupAccountRoutes(app port.AccountUseCase) {
+func (r Rest) SetupAccountRoutes(appAccount port.AccountUseCase, appAuth port.AuthUseCase) {
 	account := r.Fiber.Group("/account")
 
-	account.Post("/", injectSignupAccount(app))
-	account.Post("/login", injectLoginAccount(app))
+	account.Post("/", injectSignupAccount(appAccount))
+	account.Post("/login", injectLoginAccount(appAccount))
 
 	account.Post("/transfer-money", authorize(appAuth), injectTransferMoneyAccount(appAccount))
 }
