@@ -2,6 +2,39 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## 0.3.0 - 2023-02-24
+#### Bug Fixes
+- unecessary pointer returning in new repository - (c15e950) - Geraldo Fada
+- error not handled - (416b3e6) - Geraldo Fada
+- account repository error handling for duplicate accounts - (0b38d32) - Geraldo Fada
+- account create repository fixed with new embedded tag - (2d555b7) - Geraldo Fada
+#### Documentation
+- updating README - (2f05ee1) - Geraldo Fada
+- finalizing all the docs - (365fda3) - Geraldo Fada
+- .env example file - (1b3641d) - Geraldo Fada
+#### Features
+- Dockerfile and docker compose configured - (f945e11) - Geraldo Fada
+- authorization service for transfers - (874b3a8) - Geraldo Fada
+- repo get account by id - (e92e558) - Geraldo Fada
+- account rest transfer money completed - (9d4bc8d) - Geraldo Fada
+- repository to save transfer between accounts - (7e58727) - Geraldo Fada
+- base use case for transfering money implemented - (ff98d14) - Geraldo Fada
+- repository get by email and get by doc - (2377861) - Geraldo Fada
+#### Refactoring
+- app is now sub divided - (32ee9d3) - Geraldo Fada
+- transfer money rest authorization - (272bedb) - Geraldo Fada
+- jwt token now have an account id - (859364d) - Geraldo Fada
+- docker composes naming database schema - (53a9e9d) - Geraldo Fada
+- using gorm:embedded within Account - (1bb6688) - Geraldo Fada
+- app is now using the new type prop - (b8247d2) - Geraldo Fada
+#### Style
+- new app auth - (dfbf977) - Geraldo Fada
+- fixed repository adapter file name - (282fe65) - Geraldo Fada
+- files renaming - (eea6168) - Geraldo Fada
+- gofmt - (8f4d0ca) - Geraldo Fada
+
+- - -
+
 ## 0.2.0 - 2023-02-23
 #### Bug Fixes
 - newAccount was not creating with the new type prop - (9b568a7) - Geraldo Fada
