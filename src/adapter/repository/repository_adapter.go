@@ -87,6 +87,22 @@ func (r *Repository) GetAccountByDoc(doc string) (core.Account, error) {
 	return foundAcc, nil
 }
 
+func (r *Repository) GetAccountById(id uint) (core.Account, error) {
+	foundAcc := core.Account{}
+
+	result := r.Conn.First(&foundAcc, id)
+
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return core.Account{}, core.AccountNotFoundError{}
+		}
+
+		return core.Account{}, result.Error
+	}
+
+	return foundAcc, nil
+}
+
 // NOTE: essa função não lida com regra de negócio e apenas lida com erros que provém
 // do banco de dados. Ou seja, é necessário checar quem pode enviar dinheiro, quem possui dinheiro
 // para enviar etc etc. Atualmente isso ocorre no App que implementa o useCase de tranferência de
