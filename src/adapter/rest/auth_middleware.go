@@ -26,7 +26,7 @@ func authorize(auth port.AuthUseCase) fiberReturnCtx {
 			})
 		}
 
-		authorized, err := auth.Authorize(core.Token(token))
+		authorized, accId, err := auth.Authorize(core.Token(token))
 		if err != nil {
 			if errors.Is(err, core.TokenMissingError{}) {
 				return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
@@ -46,7 +46,7 @@ func authorize(auth port.AuthUseCase) fiberReturnCtx {
 			})
 		}
 
-		// c.Locals("accountId", acc.Id)
+		c.Locals("loggedId", accId)
 		return c.Next()
 	}
 }

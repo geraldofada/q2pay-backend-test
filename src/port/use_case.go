@@ -9,5 +9,5 @@ type AccountUseCase interface {
 }
 
 type AuthUseCase interface {
-	Authorize(token core.Token) (bool, error)
+	Authorize(token core.Token) (bool, uint, error)
 }

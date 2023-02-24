@@ -127,7 +127,7 @@ func (a *Account) Login(password string) (Token, error) {
 		return "", AccountInvalidPasswordError{}
 	}
 
-	token, err := generateJwt()
+	token, err := generateJwt(a.ID)
 	if err != nil {
 		return "", err
 	}
